@@ -2,7 +2,7 @@
     border: 0px solid;
 }
 QGroupBox {
-    border:none
+    border:none;
 }
 QLCDNumber {
     border:none;

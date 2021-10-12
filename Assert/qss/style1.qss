@@ -1,0 +1,19 @@
+﻿
+QGroupBox#mainLayout {
+    border: 2px solid black;
+    background: white;
+    border-radius: 50px;
+}
+
+QLCDNumber {
+    border: 0px solid;
+    border: none;
+    font-family: "STCaiyun";
+}
+QLabel {
+    font: 30px black;
+    font-family: "STCaiyun";
+}
+QVBoxLayout {
+    background: white;
+}

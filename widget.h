@@ -29,7 +29,10 @@
 #include <QFont>
 #include <QBitmap>
 #include <QPainter>
-
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
+#include <QPropertyAnimation>
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -45,11 +48,14 @@ public:
 private:
     void InitUI();
     void BorderRadius();
-    void InitStyle();
+    void InitStyle(int i);
+
+    void InitTrayIcon();
     void createHorizontalGroupBox();
     void createVerticalGroupBox();
     void InitConnection();
     void RefreshTime();
+    void EnterAnimation(QObject *obj);
 
 private:
     // 重写键盘事件
@@ -57,7 +63,9 @@ private:
     // 绘图
     void paintEvent(QPaintEvent *e);
     // 鼠标进入事件
-    void enterEvent(QMouseEvent *e);
+    void enterEvent(QEvent *e);
+    // 鼠标离开事件
+    void leaveEvent(QEvent *e);
 
 private:
     // 拖动事件
@@ -81,8 +89,18 @@ private:
     // 窗口拖动
     QPoint m_lastPos;
 
+    // 系统托盘
+    QSystemTrayIcon *m_SysTrayIcon;
+    QMenu *m_menu;
+    QAction *m_action1;
+    QAction *m_action2;
 
-
+    int m_nw;
+    int m_nh;
+public slots:
+    void activeTray(QSystemTrayIcon::ActivationReason reason);
+    void showWindow();
+    void changeWord();
 private:
     // Ui::Widget *ui;
 

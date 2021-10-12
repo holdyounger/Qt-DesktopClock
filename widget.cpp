@@ -5,17 +5,21 @@
 Widget::Widget()
 {
     InitUI();
-    InitStyle();
+    InitStyle(0);
     InitConnection();
     //m_LCD_Hour->display(1);
     //m_LCD_Min->display(1);
 
-    QString labCont = "“你会爱我如初吗?”\n“不，是与日剧增”";
+    QString labCont = "思念如马，自别离，未停蹄。";
     m_lab_Text->setText(labCont);
-    m_lab_Text->setAlignment(Qt::AlignVCenter | Qt:: AlignHCenter);
 
-    // 设置ico
-    setWindowIcon(QIcon(":/Assert/img/Logo.ico"));
+    QTimer::singleShot(1000*3,this,[=](){
+        QString labCont = "“你会爱我如初吗?”\n“不，是与日剧增”";
+        m_lab_Text->setText(labCont);
+    });
+    EnterAnimation(m_lab_Text);
+
+    m_lab_Text->setAlignment(Qt::AlignVCenter | Qt:: AlignHCenter);
 
     // 设置窗口透明
     // setWindowOpacity(1);
@@ -37,16 +41,25 @@ void Widget::InitUI()
 
     // 获取桌面大小
     QRect screenRect = QApplication::desktop()->screenGeometry();
-    int nw = screenRect.width();
-    int nh = screenRect.height();
+    m_nw = screenRect.width();
+    m_nh = screenRect.height();
+
+    // 圆角
+    BorderRadius();
+
+    // 设置ico
+    setWindowIcon(QIcon(":/Assert/img/Logo.ico"));
+
+    // 系统托盘
+    InitTrayIcon();
 
     // 设置位置
-    setGeometry(nw-nw / 3 * 2, nh-nh / 3 * 2, nw / 3, nh / 4);
+    setGeometry(m_nw-m_nw / 3 * 2, m_nh-m_nh / 3 * 2, m_nw / 3, m_nh / 4);
     setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    // mainLayout->setObjectName("mainLayout");
     mainLayout->addWidget(m_vbl_Main);
-
     setLayout(mainLayout);
 
     // 设置窗口置顶
@@ -54,20 +67,15 @@ void Widget::InitUI()
     setWindowTitle(tr("OneForYou"));
 }
 
+/* 设置关于窗体为圆角 */
 void Widget::BorderRadius()
 {
     QBitmap bmp(this->size());
-
     bmp.fill();
-
     QPainter p(&bmp);
-
     p.setPen(Qt::NoPen);
-
     p.setBrush(Qt::black);
-
-    p.drawRoundedRect(bmp.rect(),20,20);
-
+    p.drawRoundedRect(bmp.rect(),15,15);
     setMask(bmp);
 }
 
@@ -91,6 +99,29 @@ void Widget::InitStyle(int i)
     this->setStyleSheet(file.readAll());
     file.close();
 
+}
+
+void Widget::InitTrayIcon()
+{
+    m_SysTrayIcon = new QSystemTrayIcon(this);
+    m_SysTrayIcon->setIcon(QIcon(":/Assert/img/Logo.ico"));
+    m_SysTrayIcon->setToolTip("OneForYou");
+    m_SysTrayIcon->show();
+
+    m_menu = new QMenu(this);
+    m_action1 = new QAction(m_menu);
+    m_action2 = new QAction(m_menu);
+
+    m_action1->setText("Show Window");
+    m_action2->setText("Show Message");
+
+    m_menu->addAction(m_action1);
+    m_menu->addAction(m_action2);
+
+    connect(m_action1, &QAction::triggered, this, &Widget::showWindow);
+    connect(m_action2, &QAction::triggered, this, &Widget::changeWord);
+
+    m_SysTrayIcon->setContextMenu(m_menu);
 }
 
 void Widget::createHorizontalGroupBox()
@@ -127,6 +158,7 @@ void Widget::createHorizontalGroupBox()
 void Widget::createVerticalGroupBox()
 {
     m_vbl_Main = new QGroupBox;
+    m_vbl_Main->setObjectName("mainLayout");
     QVBoxLayout *layout = new QVBoxLayout;
 
     m_lab_Text = new QLabel;
@@ -137,6 +169,7 @@ void Widget::createVerticalGroupBox()
     layout->setSpacing(-1000);
     layout->setStretch(0,5);
     layout->setStretch(1,2);
+
     m_vbl_Main->setLayout(layout);
 }
 
@@ -150,6 +183,8 @@ void Widget::InitConnection()
         RefreshTime();
     });
 
+    connect(m_SysTrayIcon,&QSystemTrayIcon::activated,this, &Widget::activeTray);
+
 }
 
 void Widget::RefreshTime()
@@ -160,11 +195,41 @@ void Widget::RefreshTime()
     m_LCD_Hour->display(text);
 }
 
+void Widget::EnterAnimation(QObject *obj)
+{
+    // 切换特效
+    QPropertyAnimation *animation= new QPropertyAnimation(obj,"geometry");
+    animation->setEasingCurve(QEasingCurve::OutBounce);  // 缓和曲线风格
+    animation->setDuration(1000 * 3);
+    animation->setStartValue(QRect(0, 0, 640, 480));
+    QRect rec = this->geometry();
+    qDebug() << rec.x() << ':' << rec.y() << ':' << rec.width() << ':' << rec.height() << endl;
+    animation->setEndValue(QRect(0, -35, 640, 480 ));
+    animation->start();
+}
+
+void Widget::showWindow()
+{
+    if(this->isVisible() == true)
+    {
+        this->setVisible(false);
+    }
+    else
+    {
+        this->setVisible(true);
+    }
+}
+
+void Widget::changeWord()
+{
+
+}
+
 void Widget::keyPressEvent(QKeyEvent *e)
 {
     if(e->key() == Qt::Key_Escape)
     {
-        this->close();
+        this->setVisible(false);
     }
 }
 
@@ -175,25 +240,15 @@ void Widget::paintEvent(QPaintEvent *e)
 
 void Widget::enterEvent(QEvent *e)
 {
-    if(this->geometry().contains(this->mapFromGlobal(QCursor::pos())))
-    {
-        QBitmap bmp(this->size());
+    // qDebug() << "进入界面" << endl;
+    setWindowOpacity(10);
+    InitStyle(1);
+}
 
-        bmp.fill();
-
-        QPainter p(&bmp);
-
-        p.setPen(Qt::NoPen);
-
-        p.setBrush(Qt::black);
-
-        p.drawRoundedRect(bmp.rect(),20,20);
-
-        setMask(bmp);
-
-
-
-    }
+void Widget::leaveEvent(QEvent *e)
+{
+    // qDebug() << "离开界面" << endl;
+    InitStyle(0);
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -212,4 +267,22 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
 {
     // 其实这里的mouseReleaseEvent函数可以不用重写
     m_lastPos = event->globalPos();
+}
+
+void Widget::activeTray(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason)
+    {
+    case QSystemTrayIcon::Context:
+        //showMenu();
+        break;
+    case QSystemTrayIcon::DoubleClick:
+    {
+        showWindow();
+        break;
+    }
+    case QSystemTrayIcon::Trigger:
+        //showMessage();
+        break;
+    }
 }
