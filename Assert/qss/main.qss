@@ -1,0 +1,14 @@
+﻿QGroupBox {
+    border: 0px solid;
+}
+QGroupBox {
+    border:none
+}
+QLCDNumber {
+    border:none;
+    font-family: "STCaiyun";
+}
+QLabel {
+    font: 30px black;
+    font-family: "STCaiyun";
+}

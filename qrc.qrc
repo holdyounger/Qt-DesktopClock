@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/img"/>
+    <qresource prefix="/">
+        <file>Assert/img/Logo.ico</file>
+        <file>Assert/img/Logo.jpg</file>
+        <file>Assert/qss/main.qss</file>
+        <file>Assert/qss/style1.qss</file>
+    </qresource>
+</RCC>
