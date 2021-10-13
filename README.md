@@ -1,39 +1,41 @@
+---
+title: OneForYou❤️
+Description: 不局限与知乎上文案对我的吸引，想整理并能在生活工作中随时看到，因此想做一款桌面显示的软件
+---
+
 # OneForYou
 
-## 想法
+> 想法来自知乎、各公众号、句读等与文案相关的场景。借以整理
 
-#### 介绍
-桌面时钟 & 一言
+## 数据
 
-#### 软件架构
-软件架构说明
+### 文案类型
+
+| 文本类型 |        |      |      |      |      |
+| -------- | ------ | ---- | ---- | ---- | ---- |
+| 来源     | 彩虹屁 | 情绪 | 鸡汤 | 情话 | 文案 |
+
+| 文本来源 |        |      |      |      |      |
+| -------- | ------ | ---- | ---- | ---- | ---- |
+| 来源 | 知乎 | 句读 | 小红书 | 书 | 自定义 |
+
+## 程序数据来源
+
+> 目前是从CSV文件读取内容展示在界面
+
+- [x] CSV数据
+
+- [ ] API
+
+最终是保存到SQLite中
+
+- [ ] SQLite
+
+## 界面
+
+~~~
+QGroupBox#mainLayout {border-bottom:2px solid %1;border-top:2px solid %1;}QLabel {color:%1;}
+~~~
 
 
-#### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
