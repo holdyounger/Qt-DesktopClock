@@ -1,38 +1,9 @@
 ﻿#ifndef WIDGET_H
 #define WIDGET_H
-
+#pragma once
+#include "longstory.h"
 #include <QWidget>
-#include <QMessageBox>
-#include <QLCDNumber>
-#include <QLineEdit>
-#include <QColor>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QIcon>
-#include <QDebug>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QLabel>
-#include <QTime>
-#include <QTimer>
-#include <QDate>
-#include <QString>
-#include <QKeyEvent>
-#include <QApplication>
-#include <QRect>
-#include <QDesktopWidget>
-#include <QGroupBox>
-#include <QTextEdit>
-#include <QPoint>
-#include <QFile>
-#include <QDir>
-#include <QFont>
-#include <QBitmap>
-#include <QPainter>
-#include <QSystemTrayIcon>
-#include <QMenu>
-#include <QAction>
-#include <QPropertyAnimation>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -56,6 +27,7 @@ private:
     void InitConnection();
     void RefreshTime();
     void EnterAnimation(QObject *obj);
+    void changeColor();
 
 private:
     // 重写键盘事件
@@ -66,6 +38,8 @@ private:
     void enterEvent(QEvent *e);
     // 鼠标离开事件
     void leaveEvent(QEvent *e);
+    // 鼠标按下事件
+    void mouseDoubleClickEvent(QMouseEvent *e);
 
 private:
     // 拖动事件
@@ -97,6 +71,10 @@ private:
 
     int m_nw;
     int m_nh;
+
+    // 判断切换过程
+    int m_nSwitchStatus; // 等于0即可切换
+    bool m_bswitch;
 public slots:
     void activeTray(QSystemTrayIcon::ActivationReason reason);
     void showWindow();

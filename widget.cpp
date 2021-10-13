@@ -7,17 +7,8 @@ Widget::Widget()
     InitUI();
     InitStyle(0);
     InitConnection();
-    //m_LCD_Hour->display(1);
-    //m_LCD_Min->display(1);
 
-    QString labCont = "思念如马，自别离，未停蹄。";
-    m_lab_Text->setText(labCont);
-
-    QTimer::singleShot(1000*3,this,[=](){
-        QString labCont = "“你会爱我如初吗?”\n“不，是与日剧增”";
-        m_lab_Text->setText(labCont);
-    });
-    EnterAnimation(m_lab_Text);
+    m_bswitch = false;
 
     m_lab_Text->setAlignment(Qt::AlignVCenter | Qt:: AlignHCenter);
 
@@ -26,8 +17,14 @@ Widget::Widget()
     setAttribute( Qt::WA_TranslucentBackground);
 
     // 去边框
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint );
+    //m_LCD_Hour->display(1);
+    //m_LCD_Min->display(1);
 
+    QString labCont = "One For You(by mingming)";
+    m_lab_Text->setText(labCont);
+    EnterAnimation(m_lab_Text);
+    show();
 }
 
 Widget::~Widget()
@@ -60,6 +57,7 @@ void Widget::InitUI()
     QVBoxLayout *mainLayout = new QVBoxLayout;
     // mainLayout->setObjectName("mainLayout");
     mainLayout->addWidget(m_vbl_Main);
+    mainLayout->SetFixedSize;
     setLayout(mainLayout);
 
     // 设置窗口置顶
@@ -118,8 +116,8 @@ void Widget::InitTrayIcon()
     m_menu->addAction(m_action1);
     m_menu->addAction(m_action2);
 
-    connect(m_action1, &QAction::triggered, this, &Widget::showWindow);
-    connect(m_action2, &QAction::triggered, this, &Widget::changeWord);
+    //connect(m_action1, &QAction::triggered, this, &Widget::showWindow);
+    //connect(m_action2, &QAction::triggered, this, &Widget::changeWord);
 
     m_SysTrayIcon->setContextMenu(m_menu);
 }
@@ -130,6 +128,7 @@ void Widget::createHorizontalGroupBox()
     QHBoxLayout *layout = new QHBoxLayout;
 
     m_LCD_Hour = new QLCDNumber;
+
     //  m_LCD_Min = new QLCDNumber;
     // m_LCD_Sec = new QLCDNumber;
 
@@ -145,11 +144,12 @@ void Widget::createHorizontalGroupBox()
 
     m_LCD_Hour->setSegmentStyle(QLCDNumber::Filled);
     // m_LCD_Min->setSegmentStyle(QLCDNumber::Filled);
-    //  m_LCD_Sec->setSegmentStyle(QLCDNumber::Filled);
+    // m_LCD_Sec->setSegmentStyle(QLCDNumber::Filled);
 
     int nw = this->width();
     int nh = this->height();
     m_LCD_Hour->setGeometry(0,0,nw/3,nh/3);
+    m_LCD_Hour->setFixedHeight(this->width()/5);
     //    m_LCD_Min->setGeometry(0,0,nw/3,nh/3);
     //    m_LCD_Sec->setGeometry(0,0,nw/3,nh/3);
     m_hbl_Time->setLayout(layout);
@@ -163,10 +163,12 @@ void Widget::createVerticalGroupBox()
 
     m_lab_Text = new QLabel;
     m_lab_Text->setObjectName("lab_Text");
+    m_lab_Text->setWordWrap(true);
+    m_lab_Text->adjustSize();
 
     layout->addWidget(m_hbl_Time);
     layout->addWidget(m_lab_Text);
-    layout->setSpacing(-1000);
+
     layout->setStretch(0,5);
     layout->setStretch(1,2);
 
@@ -183,8 +185,36 @@ void Widget::InitConnection()
         RefreshTime();
     });
 
-    connect(m_SysTrayIcon,&QSystemTrayIcon::activated,this, &Widget::activeTray);
+    // 绑定时间
+    QTimer *colorTimer = new QTimer(this);
+    colorTimer->start(1);
+    connect(colorTimer, &QTimer::timeout, [=]()
+    {
+        if(m_bswitch)
+        {
+            // changeColor();
+        }
+    });
 
+    // 绑定文案
+    QTimer *TimerText = new QTimer(this);
+    TimerText->start(1000);
+    TimerText->setInterval(1000);
+    connect(TimerText, &QTimer::timeout, [=]()
+    {
+        m_nSwitchStatus--;
+        if(m_nSwitchStatus < 0)
+        {
+            m_nSwitchStatus = 10;
+        }
+        if(m_nSwitchStatus == 0)
+        {
+            changeWord();
+        }
+    });
+
+    connect(m_SysTrayIcon,&QSystemTrayIcon::activated,this, &Widget::activeTray);
+    // connect(m_lab_Text, &QLabel:)
 }
 
 void Widget::RefreshTime()
@@ -198,31 +228,59 @@ void Widget::RefreshTime()
 void Widget::EnterAnimation(QObject *obj)
 {
     // 切换特效
+    int nDuration = 1000 * 3;
+
+    m_bswitch = false;
+    QTimer::singleShot(nDuration + 500,this,[=](){
+        m_bswitch = true;
+    });
+
     QPropertyAnimation *animation= new QPropertyAnimation(obj,"geometry");
-    animation->setEasingCurve(QEasingCurve::OutBounce);  // 缓和曲线风格
-    animation->setDuration(1000 * 3);
+    animation->setEasingCurve(QEasingCurve::OutCubic);  // 缓和曲线风格
+    animation->setDuration(nDuration - 500);
     animation->setStartValue(QRect(0, 0, 640, 480));
-    QRect rec = this->geometry();
-    qDebug() << rec.x() << ':' << rec.y() << ':' << rec.width() << ':' << rec.height() << endl;
+    //QRect rec = this->geometry();
+    //qDebug() << rec.x() << ':' << rec.y() << ':' << rec.width() << ':' << rec.height() << endl;
     animation->setEndValue(QRect(0, -35, 640, 480 ));
-    animation->start();
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void Widget::changeColor()
+{
+    m_vbl_Main->setStyleSheet(QString("QGroupBox#mainLayout {border-bottom:2px solid %1;border-top:2px solid %1;padding: 0px;margin: 0px;}QLabel {color:%1;}").arg(Global::GetColor()));
 }
 
 void Widget::showWindow()
 {
-    if(this->isVisible() == true)
+    if(this->isVisible() == false)
     {
-        this->setVisible(false);
+        this->setVisible(true);
+        setWindowFlags(this->windowFlags() | Qt::Tool );
     }
     else
     {
-        this->setVisible(true);
+        this->setVisible(false);
+        setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint  );
     }
 }
 
+
 void Widget::changeWord()
 {
-
+    // 《1》获取文本
+    LongStory ObjLs;
+    QStringList StrLCont = ObjLs.openFileToReadData();
+    QStringList Color = {};
+    QStringList Font = {};
+    int nRad = getRandomNum(StrLCont.size());
+    int nSize = StrLCont[nRad].size();
+    qDebug() << StrLCont[nRad] << ':' << nSize;
+    int nSetFontSize = changeFontSize(nSize);
+    QString strSty = QString::fromUtf8("QLabel {font: %1px;font-family:%2;}").arg(QString::number(nSetFontSize)).arg(Global::GetFont());
+    m_lab_Text->setStyleSheet(strSty);
+    m_lab_Text->setText((StrLCont[nRad]).replace("\\n","\n"));
+    EnterAnimation(m_lab_Text);
+    m_nSwitchStatus = 10;
 }
 
 void Widget::keyPressEvent(QKeyEvent *e)
@@ -235,13 +293,17 @@ void Widget::keyPressEvent(QKeyEvent *e)
 
 void Widget::paintEvent(QPaintEvent *e)
 {
+    if(m_bswitch)
+    {
+        changeColor();
+    }
 
 }
 
 void Widget::enterEvent(QEvent *e)
 {
     // qDebug() << "进入界面" << endl;
-    setWindowOpacity(10);
+    //setWindowOpacity(10);
     InitStyle(1);
 }
 
@@ -249,6 +311,11 @@ void Widget::leaveEvent(QEvent *e)
 {
     // qDebug() << "离开界面" << endl;
     InitStyle(0);
+}
+
+void Widget::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    changeWord();
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -282,7 +349,9 @@ void Widget::activeTray(QSystemTrayIcon::ActivationReason reason)
         break;
     }
     case QSystemTrayIcon::Trigger:
-        //showMessage();
+    {
+        changeWord();
         break;
+    }
     }
 }

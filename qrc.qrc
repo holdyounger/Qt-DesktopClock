@@ -6,5 +6,7 @@
         <file>Assert/qss/main.qss</file>
         <file>Assert/qss/style1.qss</file>
         <file>Assert/data/one.csv</file>
+        <file>Config/color.ini</file>
+        <file>Config/font.ini</file>
     </qresource>
 </RCC>
