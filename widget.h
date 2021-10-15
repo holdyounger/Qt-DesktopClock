@@ -8,6 +8,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
 
+
+
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -26,8 +28,10 @@ private:
     void createVerticalGroupBox();
     void InitConnection();
     void RefreshTime();
-    void EnterAnimation(QObject *obj);
+    void EnterAnimation(QObject *obj, QRect rect = {0,0,0,0});
     void changeColor();
+    void smallToBigFont(int);
+    SHOWSOUCETYPE getChoicedItem();
 
 private:
     // 重写键盘事件
@@ -66,8 +70,13 @@ private:
     // 系统托盘
     QSystemTrayIcon *m_SysTrayIcon;
     QMenu *m_menu;
-    QAction *m_action1;
-    QAction *m_action2;
+    QAction *m_action_time;
+    QAction *m_action_source;
+    QAction *m_action_about;
+    QAction *m_action_color;
+    QAction *m_action_exit;
+    // 动效
+    QPropertyAnimation *m_animation;
 
     int m_nw;
     int m_nh;
@@ -75,10 +84,22 @@ private:
     // 判断切换过程
     int m_nSwitchStatus; // 等于0即可切换
     bool m_bswitch;
+    bool m_bActionSwitchColor;
+
+    // oneFromType
+    SHOWSOUCETYPE m_enuSourceType;
+signals:
+
+
 public slots:
-    void activeTray(QSystemTrayIcon::ActivationReason reason);
-    void showWindow();
-    void changeWord();
+    void slot_activeTray(QSystemTrayIcon::ActivationReason reason);
+    void slot_showWindow();
+    void slot_changeWord();
+    void slot_changeTime();
+    void slot_showAbout();
+    void slot_switchChangeColor();
+    void slot_changeSource();
+    void slot_exit();
 private:
     // Ui::Widget *ui;
 

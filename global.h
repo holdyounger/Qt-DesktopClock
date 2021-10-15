@@ -40,7 +40,34 @@
 #include <QFontDatabase>
 #include <QLinearGradient>
 #include <QMouseEvent>
+#include <QSpacerItem>
+#include <QDialog>
+#include <QMessageBox>
+#include <QInputDialog>
+#include <QDesktopServices>
+#include <QJsonObject>
+#include <QtNetwork/QNetworkRequest>
+#include <QNetworkAccessManager>
+#include <QMap>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QEventLoop>
+#include <QJsonDocument>
+#include <QPointer>
+#include "http.h"
+
 #endif // GLOBAL_H
+
+#define FILE_PATH_APITOKEN  ":/Config/API.ini"
+#define FILE_PATH_COLOR     ":/Config/color.ini"
+#define FILE_PATH_FONT      ":/Config/font.ini"
+#define FILE_PATH_CONFIG    ":/Config/config.txt"
+
+enum SHOWSOUCETYPE {
+    LOCAL = 1,
+    YIYAN,
+    POETRY
+};
 
 class Global{
 private:

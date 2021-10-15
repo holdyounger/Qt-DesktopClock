@@ -2,11 +2,7 @@
 
 #include <QApplication>
 
-void Run()
-{
 
-
-}
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -14,6 +10,5 @@ int main(int argc, char *argv[])
 //    QFont f("STCaiyun", 30);
 //    a.setFont(f);
     Widget w;
-    Run();
     return a.exec();
 }

@@ -1,4 +1,4 @@
-QT       += core gui sql widgets
+QT       += core gui sql widgets network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,12 +10,14 @@ CONFIG += c++11
 
 SOURCES += \
     global.cpp \
+    http.cpp \
     longstory.cpp \
     main.cpp \
     widget.cpp
 
 HEADERS += \
     global.h \
+    http.h \
     longstory.h \
     widget.h
 
@@ -31,3 +33,5 @@ DISTFILES +=
 
 RESOURCES += \
     qrc.qrc
+
+# UAC

@@ -1,5 +1,6 @@
 ﻿#include "global.h"
 #include <QDebug>
+
 Global::Global()
 {
 

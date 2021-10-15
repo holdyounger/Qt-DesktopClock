@@ -38,8 +38,12 @@ private:
     /*工具函数*/
     SouType GetSouType(_In_ QString str);
     TextType GetTextType(_In_ QString str);
+    bool GetToken(QString strTokenUrl, QString strToken);
 public:
-    QStringList openFileToReadData();
+    QString GetOne(SHOWSOUCETYPE);
+    QString GetFromLocalFile();
+    QString GetFromYiYanAPI();
+    QString GetFromPoetryAPI();
 
 
 public:

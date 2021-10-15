@@ -8,5 +8,13 @@
         <file>Assert/data/one.csv</file>
         <file>Config/color.ini</file>
         <file>Config/font.ini</file>
+        <file>Assert/img/Action/about.ico</file>
+        <file>Assert/img/Action/add.ico</file>
+        <file>Assert/img/Action/start.ico</file>
+        <file>Assert/img/Action/stop.ico</file>
+        <file>Assert/img/Action/switch.ico</file>
+        <file>Assert/img/Action/time.ico</file>
+        <file>Config/API.ini</file>
+        <file>Config/config.txt</file>
     </qresource>
 </RCC>

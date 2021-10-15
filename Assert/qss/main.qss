@@ -8,7 +8,7 @@ QLCDNumber {
     border:none;
     font-family: "STCaiyun";
 }
-QLabel {
+QLabel#lab_Text {
     padding-left: 20px;
     padding-right: 20px;
     font: 30px black;
@@ -20,4 +20,7 @@ QGroupBox#mainLayout {
     border-radius: 50px;
     padding: 0px;
     margin: 0px;
+}
+QFileDialog {
+
 }

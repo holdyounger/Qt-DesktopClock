@@ -10,7 +10,7 @@ QLCDNumber {
     border:none;
     font-family: "STCaiyun";
 }
-QLabel {
+QLabel#lab_Text {
     padding-left: 20px;
     padding-right: 20px;
     font: 30px black;
@@ -20,21 +20,10 @@ QGroupBox#mainLayout {
     border-bottom: 2px solid black;
     border-top: 2px solid black;
     border-radius: 50px;
+    background: white;
     padding: 0px;
     margin: 0px;
 }
 
 /* 额外效果 */
-
-QGroupBox#mainLayout {
-    border-bottom: 2px solid green;
-    border-top: 2px solid green;
-    background: white;
-    padding: 0px;
-    margin: 0px;
-    border-radius: 50px;
-}
-QVBoxLayout {
-    background: white;
-}
 
