@@ -1,7 +1,7 @@
 ﻿#include "widget.h"
 #include "ui_widget.h"
 #pragma execution_character_set("utf-8")
-#define OBJNAME(x) (#x)
+#define OBJNAME(x) (QString(#x))
 
 int g_nSwitchDuration;
 Widget::Widget()
@@ -366,7 +366,10 @@ QString Widget::getChoicedFont()
     int nCount = setFontIni.value("Font/Number").toInt();
     for(int i = 0; i < nCount; i++)
     {
-        FontMap.insert(setFontIni.value(QString("Font/%1").arg(OBJNAME(FONTTYPE(i)))).toString(), FONTTYPE(i));
+        FONTTYPE enuFont = FONTTYPE(i);
+        QString iniName = OBJNAME(FONTTYPE(i));
+        QString key = setFontIni.value(QString("Font/%1").arg(iniName)).toString();
+        FontMap.insert(key, FONTTYPE(i));
     }
 
     Items << tr("楷体") << tr("汉仪手写书简") << tr("每日诗词");
