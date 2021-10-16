@@ -1,26 +1,172 @@
 ﻿QGroupBox {
-    border: 0px solid;
+  border: 0px solid;
 }
 QGroupBox {
-    border:none;
+  border: none;
 }
 QLCDNumber {
-    border:none;
-    font-family: "STCaiyun";
+  border: none;
+  font-family: "STCaiyun";
 }
 QLabel#lab_Text {
-    padding-left: 20px;
-    padding-right: 20px;
-    font: 30px black;
-    font-family: "STCaiyun";
+  padding-left: 20px;
+  padding-right: 20px;
+  font: 30px black;
+  font-family: "STCaiyun";
 }
 QGroupBox#mainLayout {
-    border-bottom: 2px solid black;
-    border-top: 2px solid black;
-    border-radius: 50px;
-    padding: 0px;
-    margin: 0px;
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+  border-radius: 50px;
+  padding: 0px;
+  margin: 0px;
 }
-QFileDialog {
 
+QInputDialog {
+  background-color: #fdfefe;
+  padding: 5px;
+  border-radius: 50px;
+  opacity: 210;
+}
+
+QPushButton {
+  border: 1px solid #2ecc71;
+  border-radius: 2px;
+  padding: 1px 4px;
+  min-width: 50px;
+  min-height: 16px;
+}
+
+QPushButton:hover {
+  background-color: #2ecc71;
+  border: 1px solid #2ecc71;
+  font-weight: bolder;
+  color: white;
+  font-weight: bolder;
+}
+
+QPushButton:pressed {
+  border-width: 1px;
+  background-color: white;
+  border-color: white;
+  color: #2ecc71;
+  font-weight: bolder;
+}
+
+QPushButton:focus,
+QPushButton:default {
+  border-color: #28b463; /* make the default button prominent */
+}
+
+QSpinBox {
+  text-align: center;
+  font-family: "KaiTi";
+  min-width: 150px;
+  min-height: 30px;
+  border-radius: 50px;
+  border: 1px solid #2ecc71;
+}
+QSpinBox QLabel {
+  font-size: 30px;
+  font-family: "KaiTi";
+}
+QSpinBox QLineEdit {
+  font-size: 20px;
+  font-family: "KaiTi";
+}
+
+QSpinBox {
+  text-align: center;
+  font-family: "KaiTi";
+  min-width: 150px;
+  min-height: 30px;
+  border-radius: 50px;
+  border: 1px solid #2ecc71;
+}
+QSpinBox QLabel {
+  font-family: "KaiTi";
+}
+QSpinBox QLineEdit {
+  font-size: 30px;
+  font-family: "KaiTi";
+}
+
+QSpinBox::down-button {
+  image: url(:/Assert/img/Action/down.ico);
+  /* subcontrol-origin: padding;
+subcontrol-position: right bottom;*/
+}
+QSpinBox::up-button {
+  image: url(:/Assert/img/Action/up.ico);
+  /* subcontrol-origin: padding;
+subcontrol-position: right bottom;*/
+}
+QSpinBox::down-button::hover {
+  image: url(:/Assert/img/Action/downhover.ico);
+  color: white;
+}
+QSpinBox::up-button::hover {
+  image: url(:/Assert/img/Action/uphover.ico);
+  /* subcontrol-origin: padding;
+subcontrol-position: right bottom;*/
+  color: white;
+}
+QSpinBox::down-button::pressed {
+  image: url(:/Assert/img/Action/downhover.ico);
+  background: white;
+}
+QSpinBox::up-button::pressed {
+  image: url(:/Assert/img/Action/uphover.ico);
+  /* subcontrol-origin: padding;
+subcontrol-position: right bottom;*/
+  background: white;
+}
+
+QMessageBox {
+  background: white;
+  min-width: 700px;
+  text-align: center;
+  font-size: 18px;
+  font-family: "KaiTi";
+}
+QMessageBox QLabel {
+  font-family: "KaiTi";
+}
+QMessageBox QPushButton {
+  font-family: "KaiTi";
+}
+
+QMenu QAction::hover {
+  background-color: #2ecc71;
+}
+
+QComboBox {
+  text-align: center;
+  font-family: "KaiTi";
+  min-width: 150px;
+  min-height: 35px;
+  border-radius: 50px;
+  border: 1px solid #2ecc71;
+}
+QInputDialog QLabel {
+  font-size: 20px;
+  font-family: "KaiTi";
+}
+QInputDialog QLineEdit {
+  font-size: 35px;
+  font-family: "KaiTi";
+}
+QComboBox::down-arrow {
+  image: url(:/Assert/img/Action/down.ico);
+  subcontrol-origin: paint-alternating-row-colors-for-empty-area;
+  subcontrol-origin: padding;
+  subcontrol-position: right bottom;
+}
+QComboBox::down-arrow::hover {
+  image: url(:/Assert/img/Action/downhover.ico);
+  color: white;
+}
+QComboBox::down-arrow::pressed {
+  image: url(:/Assert/img/Action/downhover.ico);
+  background: white;
 }

@@ -49,11 +49,14 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QMap>
+#include <QMapIterator>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QEventLoop>
 #include <QJsonDocument>
 #include <QPointer>
+#include <QColorDialog>
+
 #include "http.h"
 
 #endif // GLOBAL_H

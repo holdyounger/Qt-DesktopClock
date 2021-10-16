@@ -1,10 +1,9 @@
 ﻿#include "longstory.h"
 
-const QString g_poetryUrl = "https://v2.jinrishici.com/sentence";
-const QString g_yiyanUrl = "https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&"
-                              "client_id=%1&client_secret=%2&";
-const QString g_poetryGetTokenURL = "https://v2.jinrishici.com/token";
-const QString g_yiyanGetTokenURL = "https://v2.jinrishici.com/token";
+const QString g_poetryUrl           = "https://v2.jinrishici.com/sentence";
+const QString g_yiyanUrl            = "https://v1.hitokoto.cn";
+const QString g_poetryGetTokenURL   = "https://v2.jinrishici.com/token";
+const QString g_yiyanGetTokenURL    = "https://v2.jinrishici.com/token";
 QString g_token;
 
 SouType LongStory::GetSouType(QString str)
@@ -65,9 +64,11 @@ bool LongStory::GetToken(QString strTokenUrl, QString strToken)
     QNetworkRequest request;
 
     //获取access_token
-    QByteArray replyData;                           // 保存回复信息
+    QByteArray replyData; // 保存回复信息
+    QMap<QString, QString> header;
+    header.clear();
 
-    bool result = Http::get_token(strTokenUrl,replyData);
+    bool result = Http::get_sync(strTokenUrl,replyData,header);
     if(result)
     {
         QJsonObject obj = QJsonDocument::fromJson(replyData).object();  //应该在fromJson之后判断一下是不是json对象
@@ -115,6 +116,7 @@ QString LongStory::GetFromLocalFile()
                 stuTemp.clear();
             }
         }
+        delete read;
     }
 
     int nRad = getRandomNum(retList.size());
@@ -124,9 +126,25 @@ QString LongStory::GetFromLocalFile()
 
 QString LongStory::GetFromYiYanAPI()
 {
-    QString strRet;
-    QSettings setIni(":/Config/API.ini");
-    QString strToken = setIni.value("YIYAN/token").toString();
+    QString strRet = NULL;
+    QSettings setIni(FILE_PATH_APITOKEN,QSettings::IniFormat);
+    QMap<QString,QString> header;
+    QByteArray replyData;      // 保存回复信息
+
+    // 1 直接调用API即可
+    // 1.2 组装HTTP头部
+    header.clear();
+
+    bool result = Http::get_sync(g_yiyanUrl, replyData, header);
+    if(result)
+    {
+        QJsonObject obj = QJsonDocument::fromJson(replyData).object();  //应该在fromJson之后判断一下是不是json对象
+        strRet = obj.value("hitokoto").toString();
+        if(strRet.isEmpty())
+        {
+            strRet = "";
+        }
+    }
 
     return strRet;
 }
@@ -136,6 +154,8 @@ QString LongStory::GetFromPoetryAPI()
     QString strRet = NULL;
     QString strSetValue;
     QSettings setIni(FILE_PATH_APITOKEN,QSettings::IniFormat);
+    QMap<QString,QString> header;
+    QByteArray replyData;      // 保存回复信息
 
     // 1 获取Token
     // - 1.1 配置文件
@@ -155,10 +175,18 @@ QString LongStory::GetFromPoetryAPI()
     }
 
     // 2 组装HTTP头部
-    QMap<QString,QString> header;
-    header.insert(QString("Content-Type"),
-                  QString("application/x-www-form-urlencoded"));
-
+    header.insert(QString("X-User-Token").toUtf8(), g_token.toUtf8());
+    bool result = Http::get_sync(g_poetryUrl, replyData, header);
+    if(result)
+    {
+        QJsonObject obj = QJsonDocument::fromJson(replyData).object();  //应该在fromJson之后判断一下是不是json对象
+        if(obj.value("status").toString() == "success")
+        {
+            QJsonObject dataObj = obj.value("data").toObject();
+            strRet = dataObj.value("content").toString();
+            // qDebug() << g_token << endl;
+        }
+    }
 
     return strRet;
 }

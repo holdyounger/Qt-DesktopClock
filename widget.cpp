@@ -7,11 +7,13 @@ Widget::Widget()
     InitUI();
     InitStyle(0);
     InitConnection();
+    InitLoadFont();
 
     // 初始化变量
     m_bswitch = false;
     m_bActionSwitchColor = true;
-    m_enuSourceType = POETRY;
+    m_enuSourceType = LOCAL;
+    m_LCD_color = QColor(0,0,0);
     g_nSwitchDuration = 10;
 
     m_lab_Text->setAlignment(Qt::AlignVCenter | Qt:: AlignHCenter);
@@ -29,14 +31,19 @@ Widget::Widget()
     m_lab_Text->setText(labCont);
     // EnterAnimation(m_lab_Text, m_lab_Text->geometry());
     show();
+
 }
 
 Widget::~Widget()
 {
+
 }
 
 void Widget::InitUI()
 {
+    QFont f("KaiTi", 30);
+    setFont(f);
+
     createHorizontalGroupBox();
     createVerticalGroupBox();
 
@@ -84,7 +91,7 @@ void Widget::BorderRadius()
 
 void Widget::InitStyle(int i)
 {
-    m_LCD_Hour->setStyleSheet("color: black; font: 18px black;");
+    m_LCD_Hour->setStyleSheet(" font: 18px black;");
     if(i != 0)
     {
         QFile file(QString(":/Assert/qss/style%1.qss").arg(i));
@@ -118,26 +125,32 @@ void Widget::InitTrayIcon()
     m_action_about = new QAction(m_menu);
     m_action_color = new QAction(m_menu);
     m_action_exit  = new QAction(m_menu);
+    m_action_LCDColor  = new QAction(m_menu);
 
     m_action_time->setText(QString("更换切换时间"));
     m_action_source->setText(QString("更换源"));
     m_action_about->setText(QString("关于"));
     m_action_color->setText(QString("边框彩带开关"));
     m_action_exit->setText(QString("退出"));
+    m_action_LCDColor->setText(QString("更改时间颜色"));
 
     m_action_time->setIcon(QIcon(":/Assert/img/Action/time.ico"));
     m_action_source->setIcon(QIcon(":/Assert/img/Action/switch.ico"));
     m_action_color->setIcon(QIcon(":/Assert/img/Action/stop.ico"));
     m_action_about->setIcon(QIcon(":/Assert/img/Action/about.ico"));
+    m_action_LCDColor->setIcon(QIcon(":/Assert/img/Action/LCD.ico"));
     //m_action_about->setIconText(QString("关于"));
 
     m_menu->addAction(m_action_time);
     m_menu->addAction(m_action_source);
+    m_menu->addSeparator();
     m_menu->addAction(m_action_color);
+    m_menu->addAction(m_action_LCDColor);
     m_menu->addSeparator();
     m_menu->addAction(m_action_about);
     m_menu->addAction(m_action_exit);
 
+    connect(m_action_LCDColor, &QAction::triggered, this, &Widget::slot_switchChangeLCDColor);
     connect(m_action_color, &QAction::triggered, this, &Widget::slot_switchChangeColor);
     connect(m_action_time, &QAction::triggered, this, &Widget::slot_changeTime);
     connect(m_action_source, &QAction::triggered, this, &Widget::slot_changeSource);
@@ -147,24 +160,27 @@ void Widget::InitTrayIcon()
     m_SysTrayIcon->setContextMenu(m_menu);
 }
 
+void Widget::InitLoadFont()
+{
+    QFontDatabase::addApplicationFont(":/Assert/font/HYShangWeiShouShuW.ttf");
+}
+
 void Widget::createHorizontalGroupBox()
 {
     QHBoxLayout *layout = new QHBoxLayout;
     QSpacerItem* vSpacer2 = new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    //    QSpacerItem *spaceLeft = new QSpacerItem();
-    //    QSpacerItem *spaceright = new QSpacerItem;
     m_LCD_Hour = new QLCDNumber;
     m_hbl_Time = new QGroupBox;
 
+    int nw = this->width();
+    int nh = this->height();
 
     m_LCD_Hour->setObjectName("LCD_Hour");
     m_LCD_Hour->setDigitCount(8);
-
     m_LCD_Hour->setSegmentStyle(QLCDNumber::Flat);
     m_LCD_Hour->setFrameShape(QFrame::HLine);
+    m_LCD_Hour->setBackgroundRole(QPalette::Text);
 
-    int nw = this->width();
-    int nh = this->height();
     m_LCD_Hour->setGeometry(0,0,nw,nh);
     m_LCD_Hour->setFixedHeight(this->width()/5);
     //m_LCD_Hour->setFixedWidth(this->width());
@@ -255,8 +271,9 @@ void Widget::RefreshTime()
 
 void Widget::EnterAnimation(QObject *obj, QRect rect)
 {
+    // LeaveAnimation(obj,rect);
     // 切换特效
-    int nDuration = 1000 * 1;
+    int nDuration = 500 * 1;
 
     m_bswitch = false;
     QTimer::singleShot(nDuration,this,[=](){
@@ -275,13 +292,30 @@ void Widget::EnterAnimation(QObject *obj, QRect rect)
     //qDebug() << rect.x() << ':' << rect.y() << ':' << rect.width() << ':' << rect.height() << endl;
     m_animation->setEndValue(QRect(rect.x(), rect.y(), rect.width(), rect.height()));
     m_animation->start(QAbstractAnimation::KeepWhenStopped);
+    m_animation->deleteLater();
+}
+
+void Widget::LeaveAnimation(QObject *obj, QRect rect)
+{
+    // 切换特效
+    int nDuration = 500 * 1;
+    m_animation= new QPropertyAnimation(obj,"geometry");
+    m_animation->setEasingCurve(QEasingCurve::InOutExpo);  // 缓和曲线风格
+    m_animation->setDuration(nDuration);
+    m_animation->setStartValue(QRect(rect.x(), rect.y(), rect.width(), rect.height()));
+    //QRect rec = this->geometry();
+    //qDebug() << rect.x() << ':' << rect.y() << ':' << rect.width() << ':' << rect.height() << endl;
+    m_animation->setEndValue(QRect(rect.x() - 300, rect.y(), rect.width(), rect.height()));
+    m_animation->start(QAbstractAnimation::KeepWhenStopped);
+    m_animation->deleteLater();
 }
 
 void Widget::changeColor()
 {
     if(m_bActionSwitchColor)
     {
-        m_vbl_Main->setStyleSheet(QString("QGroupBox#mainLayout {border-bottom:2px solid %1;border-top:2px solid %1;padding: 0px;margin: 0px;}").arg(Global::GetColor()));
+        m_vbl_Main->setStyleSheet(QString("QGroupBox#mainLayout {border-bottom:2px solid %1;border-top:2px solid %1;padding: 0px;margin: 0px;}"
+"QLCDNumber{color:rgb(%2,%3,%4);}").arg(Global::GetColor()).arg(m_LCD_color.red()).arg(m_LCD_color.green()).arg(m_LCD_color.blue()));
     }
 }
 
@@ -292,8 +326,10 @@ SHOWSOUCETYPE Widget::getChoicedItem()
     Items << tr("本地") << tr("每日一言") << tr("每日诗词");
 
     bool ok;
-    QString item = QInputDialog::getItem(this, tr("更换一言来源"),
-                                         tr("来源:"), Items, 0, false, &ok);
+    QInputDialog Dialog;
+    Dialog.setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+    QString item = Dialog.getItem(this, tr("更换一言来源"),
+                                  tr("来源:"), Items, 0, false, &ok);
     if (ok && !item.isEmpty())
     {
         if(item == "本地")
@@ -339,7 +375,7 @@ void Widget::slot_changeWord()
     QString strStyle;
 
     // 先清空
-    m_lab_Text->clear();
+    // m_lab_Text->clear();
     // <1>获取文本
     QString StrLCont = ObjLs.GetOne(m_enuSourceType);
 
@@ -359,6 +395,7 @@ void Widget::slot_changeWord()
     }
     EnterAnimation(m_lab_Text, m_lab_Text->geometry());
 
+
     // 判断是否获取错误
     if(StrLCont.contains("请尝试切换"))
     {
@@ -375,9 +412,9 @@ void Widget::slot_changeWord()
                 m_enuSourceType = LOCAL;
                 // qDebug() << "切换" ;
                 slot_changeWord();
-                delete timer;
             }
         });
+        timer->deleteLater();
 
     }
 
@@ -387,8 +424,13 @@ void Widget::slot_changeWord()
 void Widget::slot_changeTime()
 {
     bool ok;
-    int nTime = QInputDialog::getInt(this, tr("更改文案切换时间"),
-                                     tr("时间(秒):"), 10, 3, 60, 1, &ok);
+    QInputDialog Dialog;
+    Dialog.setWindowFlags(Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
+    Dialog.setOption(QInputDialog::UseListViewForComboBoxItems);
+    //msgBox.setIcon(QMessageBox::NoIcon);
+    //Dialog.setIconPixmap(QPixmap(":/Assert/img/Action/information.png"));
+    int nTime = Dialog.getInt(this, tr("更改文案切换时间"),
+                              tr("时间(秒):"), 10, 3, 60 * 5, 1, &ok);
     if (ok && nTime != 0)
     {
         g_nSwitchDuration = nTime;
@@ -410,15 +452,27 @@ void Widget::slot_switchChangeColor()
     m_action_color->setIcon(QIcon(str));
 }
 
+void Widget::slot_switchChangeLCDColor()
+{
+    m_LCD_color = QColorDialog::getColor(Qt::red, this, tr("颜色对话框"), QColorDialog::ShowAlphaChannel);
+}
+
 void Widget::slot_changeSource()
 {
-     m_enuSourceType = getChoicedItem();
-     slot_changeWord();
+    m_enuSourceType = getChoicedItem();
+    slot_changeWord();
 }
 
 void Widget::slot_exit()
 {
-    close();
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
+    //msgBox.setIcon(QMessageBox::NoIcon);
+    msgBox.setIconPixmap(QPixmap(":/Assert/img/Action/information.png"));
+    if (!(msgBox.information(this,tr("One For You"),tr("\t退出程序\t"),tr("√"),tr("×"))))
+    {
+        exit(0);
+    }
 }
 
 void Widget::keyPressEvent(QKeyEvent *e)
@@ -431,8 +485,6 @@ void Widget::keyPressEvent(QKeyEvent *e)
 
 void Widget::paintEvent(QPaintEvent *e)
 {
-    // qDebug() << m_lab_Text->geometry();
-
     if(m_bswitch)
     {
         changeColor();

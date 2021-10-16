@@ -22,13 +22,16 @@ private:
     void InitUI();
     void BorderRadius();
     void InitStyle(int i);
-
     void InitTrayIcon();
+    void InitLoadFont();
+
+
     void createHorizontalGroupBox();
     void createVerticalGroupBox();
     void InitConnection();
     void RefreshTime();
     void EnterAnimation(QObject *obj, QRect rect = {0,0,0,0});
+    void LeaveAnimation(QObject *obj, QRect rect = {0,0,0,0});
     void changeColor();
     void smallToBigFont(int);
     SHOWSOUCETYPE getChoicedItem();
@@ -44,6 +47,9 @@ private:
     void leaveEvent(QEvent *e);
     // 鼠标按下事件
     void mouseDoubleClickEvent(QMouseEvent *e);
+
+    // 关闭时间
+    // void closeEvent(QCloseEvent *e);
 
 private:
     // 拖动事件
@@ -75,8 +81,13 @@ private:
     QAction *m_action_about;
     QAction *m_action_color;
     QAction *m_action_exit;
+    QAction *m_action_LCDColor;
     // 动效
     QPropertyAnimation *m_animation;
+
+    // LCD 颜色
+    QColor m_LCD_color;
+
 
     int m_nw;
     int m_nh;
@@ -98,6 +109,7 @@ public slots:
     void slot_changeTime();
     void slot_showAbout();
     void slot_switchChangeColor();
+    void slot_switchChangeLCDColor();
     void slot_changeSource();
     void slot_exit();
 private:

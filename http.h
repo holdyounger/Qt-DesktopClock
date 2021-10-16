@@ -9,7 +9,7 @@ public:
    Http();
 
    static bool post_sync(QString url,QMap<QString,QString> header,QByteArray &requestData,QByteArray& replyData);
-   static bool get_token(QString url, QByteArray& replyData);
+   static bool get_sync(QString url, QByteArray& replyData, QMap<QString, QString> header);
 };
 
 #endif // HTTP_H

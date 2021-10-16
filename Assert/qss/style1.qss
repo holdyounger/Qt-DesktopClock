@@ -1,5 +1,4 @@
-﻿
-/* 基础 */
+﻿/* 基础 */
 QGroupBox {
     border: 0px solid;
 }
@@ -25,5 +24,30 @@ QGroupBox#mainLayout {
     margin: 0px;
 }
 
-/* 额外效果 */
+QPushButton {
+    border: 1px solid #2ECC71;
+    border-radius: 2px;
+    padding: 1px 4px;
+    min-width: 50px;
+    min-height: 16px;
+}
+
+QPushButton:hover{
+         background-color: #FDFEFE;
+         border: 1px solid #2ECC71;
+         color: #F0F3F4;
+         font-weight: bolder;
+}
+
+QPushButton:pressed
+{
+    border-width: 1px;
+    background-color: black;
+    border-color: black;
+}
+
+QPushButton:focus, QPushButton:default {
+    border-color: #28B463; /* make the default button prominent */
+}
+
 

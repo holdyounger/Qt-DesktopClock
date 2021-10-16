@@ -5,9 +5,6 @@ Http::Http()
 
 }
 
-/*
-
-*/
 bool Http::post_sync(QString url, QMap<QString, QString> header, QByteArray &requestData, QByteArray &replyData)
 {
     bool bRet;
@@ -44,11 +41,21 @@ _END_:
     return bRet;
 }
 
-bool Http::get_token(QString url, QByteArray &replyData)
+bool Http::get_sync(QString url, QByteArray &replyData, QMap<QString, QString> header)
 {
     bool bRet = false;
     QNetworkAccessManager *manager = new QNetworkAccessManager;
     QNetworkRequest request;
+
+    if(!header.isEmpty())
+    {
+        QMap<QString,QString>::iterator it = header.begin();
+        while (it != header.end())
+        {
+            request.setRawHeader(it.key().toLatin1(), it.value().toLatin1());
+            it++;
+        }
+    }
 
     request.setUrl(url);
     QNetworkReply * reply = manager->get(request);
@@ -67,6 +74,7 @@ bool Http::get_token(QString url, QByteArray &replyData)
     }
 
 _END_:
+    manager->deleteLater();
     reply->deleteLater();
     delete manager;
     return bRet;

@@ -16,5 +16,14 @@
         <file>Assert/img/Action/time.ico</file>
         <file>Config/API.ini</file>
         <file>Config/config.txt</file>
+        <file>Assert/img/Action/LCD.ico</file>
+        <file>Assert/img/Action/spindown.ico</file>
+        <file>Assert/img/Action/information.ico</file>
+        <file>Assert/img/Action/information.png</file>
+        <file>Assert/img/Action/down.ico</file>
+        <file>Assert/img/Action/up.ico</file>
+        <file>Assert/img/Action/downhover.ico</file>
+        <file>Assert/img/Action/uphover.ico</file>
+        <file>Assert/font/HYShangWeiShouShuW.ttf</file>
     </qresource>
 </RCC>
