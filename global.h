@@ -72,6 +72,36 @@ enum SHOWSOUCETYPE {
     POETRY
 };
 
+enum FONTTYPE {
+    HYShangWeiShouShuW = 0,
+    SimSun,
+    SimHei,
+    Microsoft_YaHei,
+    Microsoft_JhengHei,
+    NSimSun,
+    PMingLiU,
+    MingLiU,
+    DFKai_SB,
+    FangSong,
+    KaiTi,
+    FangSong_GB2312,
+    KaiTi_GB2312,
+    LiSu,
+    YouYuan,
+    STXihei,
+    STKaiti,
+    STSong,
+    STZhongsong,
+    STFangsong,
+    FZShuTi,
+    FZYaoti,
+    STCaiyun,
+    STHupo,
+    STLiti,
+    STXingkai,
+    STXinwei
+};
+
 class Global{
 private:
     Global();

@@ -1,6 +1,8 @@
 ﻿#include "widget.h"
 #include "ui_widget.h"
 #pragma execution_character_set("utf-8")
+#define OBJNAME(x) (#x)
+
 int g_nSwitchDuration;
 Widget::Widget()
 {
@@ -118,14 +120,14 @@ void Widget::InitTrayIcon()
     m_SysTrayIcon->setToolTip("OneForYou");
     m_SysTrayIcon->show();
 
-    m_menu = new QMenu(this);
-
-    m_action_time = new QAction(m_menu);
-    m_action_source = new QAction(m_menu);
-    m_action_about = new QAction(m_menu);
-    m_action_color = new QAction(m_menu);
-    m_action_exit  = new QAction(m_menu);
-    m_action_LCDColor  = new QAction(m_menu);
+    m_menu            = new QMenu(this);
+    m_action_time     = new QAction(m_menu);
+    m_action_source   = new QAction(m_menu);
+    m_action_about    = new QAction(m_menu);
+    m_action_color    = new QAction(m_menu);
+    m_action_exit     = new QAction(m_menu);
+    m_action_LCDColor = new QAction(m_menu);
+    m_action_font     = new QAction(m_menu);
 
     m_action_time->setText(QString("更换切换时间"));
     m_action_source->setText(QString("更换源"));
@@ -133,16 +135,18 @@ void Widget::InitTrayIcon()
     m_action_color->setText(QString("边框彩带开关"));
     m_action_exit->setText(QString("退出"));
     m_action_LCDColor->setText(QString("更改时间颜色"));
+    m_action_font->setText(QString("更改文案字体"));
 
     m_action_time->setIcon(QIcon(":/Assert/img/Action/time.ico"));
     m_action_source->setIcon(QIcon(":/Assert/img/Action/switch.ico"));
     m_action_color->setIcon(QIcon(":/Assert/img/Action/stop.ico"));
     m_action_about->setIcon(QIcon(":/Assert/img/Action/about.ico"));
     m_action_LCDColor->setIcon(QIcon(":/Assert/img/Action/LCD.ico"));
-    //m_action_about->setIconText(QString("关于"));
+    m_action_font->setIcon(QIcon(":/Assert/img/Action/font.ico"));
 
     m_menu->addAction(m_action_time);
     m_menu->addAction(m_action_source);
+    m_menu->addAction(m_action_font);
     m_menu->addSeparator();
     m_menu->addAction(m_action_color);
     m_menu->addAction(m_action_LCDColor);
@@ -150,6 +154,7 @@ void Widget::InitTrayIcon()
     m_menu->addAction(m_action_about);
     m_menu->addAction(m_action_exit);
 
+    connect(m_action_font, &QAction::triggered, this, &Widget::slot_changeFont);
     connect(m_action_LCDColor, &QAction::triggered, this, &Widget::slot_switchChangeLCDColor);
     connect(m_action_color, &QAction::triggered, this, &Widget::slot_switchChangeColor);
     connect(m_action_time, &QAction::triggered, this, &Widget::slot_changeTime);
@@ -352,6 +357,47 @@ SHOWSOUCETYPE Widget::getChoicedItem()
     return LOCAL;
 }
 
+QString Widget::getChoicedFont()
+{
+    QMap<QString,FONTTYPE> FontMap;
+    QSettings setFontIni(":/Config/font.ini",QSettings::IniFormat);
+    QStringList Items;
+
+    int nCount = setFontIni.value("Font/Number").toInt();
+    for(int i = 0; i < nCount; i++)
+    {
+        FontMap.insert(setFontIni.value(QString("Font/%1").arg(OBJNAME(FONTTYPE(i)))).toString(), FONTTYPE(i));
+    }
+
+    Items << tr("楷体") << tr("汉仪手写书简") << tr("每日诗词");
+
+    bool ok;
+    QInputDialog Dialog;
+    Dialog.setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
+    QString item = Dialog.getItem(this, tr("更换一言来源"),
+                                  tr("来源:"), Items, 0, false, &ok);
+    if (ok && !item.isEmpty())
+    {
+        if(item == "本地")
+        {
+            return "LOCAL";
+        }
+        else if(item == "每日诗词")
+        {
+            return "POETRY";
+        }
+        else if(item == "每日一言")
+        {
+            return "YIYAN";
+        }
+        else
+        {
+            return "LOCAL";
+        }
+    }
+    return "LOCAL";
+}
+
 void Widget::slot_showWindow()
 {
     if(this->isVisible())
@@ -381,11 +427,11 @@ void Widget::slot_changeWord()
 
     // <2> 获取用户设置
     int nSize = StrLCont.size();
-    int nSetFontSize = changeFontSize(nSize);
+    int nSetFontSize = changeFontSize(nSize - 2);
 
     // qDebug() << StrLCont[nRad] << ':' << nSize;
 
-    strStyle = QString::fromUtf8("QLabel {font: %1px %2;}").arg(QString::number(nSetFontSize)).arg(Global::GetFont());
+    strStyle = QString::fromUtf8("QLabel {font: %1px %2;}").arg(QString::number(nSetFontSize)).arg(m_fontFamily);
     m_lab_Text->setStyleSheet(strStyle);
     m_lab_Text->setText((StrLCont).replace("\\n","\n"));
 
@@ -443,6 +489,12 @@ void Widget::slot_showAbout()
 {
     QString URL = "https://www.yuque.com/docs/share/78da571b-0bd6-428e-93db-b5673b487d30?#%20%E3%80%8AOneForYou%E3%80%8B";
     QDesktopServices::openUrl(QUrl(URL.toLatin1()));
+}
+
+void Widget::slot_changeFont()
+{
+    m_fontFamily = getChoicedFont();
+    slot_changeWord();
 }
 
 void Widget::slot_switchChangeColor()

@@ -35,6 +35,7 @@ private:
     void changeColor();
     void smallToBigFont(int);
     SHOWSOUCETYPE getChoicedItem();
+    QString getChoicedFont();
 
 private:
     // 重写键盘事件
@@ -82,11 +83,16 @@ private:
     QAction *m_action_color;
     QAction *m_action_exit;
     QAction *m_action_LCDColor;
+    QAction *m_action_font;
+
     // 动效
     QPropertyAnimation *m_animation;
 
     // LCD 颜色
     QColor m_LCD_color;
+
+    // 字体
+    QString m_fontFamily;
 
 
     int m_nw;
@@ -108,6 +114,7 @@ public slots:
     void slot_changeWord();
     void slot_changeTime();
     void slot_showAbout();
+    void slot_changeFont();
     void slot_switchChangeColor();
     void slot_switchChangeLCDColor();
     void slot_changeSource();

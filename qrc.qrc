@@ -25,5 +25,6 @@
         <file>Assert/img/Action/downhover.ico</file>
         <file>Assert/img/Action/uphover.ico</file>
         <file>Assert/font/HYShangWeiShouShuW.ttf</file>
+        <file>Assert/img/Action/font.ico</file>
     </qresource>
 </RCC>
