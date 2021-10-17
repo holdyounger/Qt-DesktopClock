@@ -84,6 +84,7 @@ private:
     QAction *m_action_exit;
     QAction *m_action_LCDColor;
     QAction *m_action_font;
+    QAction *m_action_fontColor;
 
     // 动效
     QPropertyAnimation *m_animation;
@@ -93,7 +94,8 @@ private:
 
     // 字体
     QString m_fontFamily;
-
+    QString m_FontColor;
+    int m_nSetFontSize;
 
     int m_nw;
     int m_nh;
@@ -102,6 +104,7 @@ private:
     int m_nSwitchStatus; // 等于0即可切换
     bool m_bswitch;
     bool m_bActionSwitchColor;
+    bool m_bFontAutoColorSwitch;
 
     // oneFromType
     SHOWSOUCETYPE m_enuSourceType;
@@ -115,12 +118,13 @@ public slots:
     void slot_changeTime();
     void slot_showAbout();
     void slot_changeFont();
+    void slot_autoChangeFontColor();
+    void slot_customChangeFontColor();
     void slot_switchChangeColor();
     void slot_switchChangeLCDColor();
     void slot_changeSource();
     void slot_exit();
 private:
     // Ui::Widget *ui;
-
 };
 #endif // WIDGET_H

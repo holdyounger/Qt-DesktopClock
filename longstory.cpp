@@ -95,7 +95,8 @@ QString LongStory::GetFromLocalFile()
     QStringList retList;
     if(!file.open(QIODevice::ReadOnly))
     {
-        qDebug()<<QStringLiteral("请正确选择csv文件");
+        return "";
+        // qDebug()<<QStringLiteral("请正确选择csv文件");
     }
     else
     {
@@ -107,13 +108,13 @@ QString LongStory::GetFromLocalFile()
             QStringList strLine = Data.at(i).split(",");         //一行中的单元格以，区分
             if(!strLine.at(1).isEmpty())
             {
-                STU_WORD stuTemp;
+//                STU_WORD stuTemp;
                 retList.append(strLine.at(1));
-                stuTemp.enuTextType = GetTextType(strLine.at(0));
-                stuTemp.enuSouType  = GetSouType(strLine.at(2));
-                stuTemp.StrCont = strLine.at(1);
-                m_StuWord.append(stuTemp);
-                stuTemp.clear();
+//                stuTemp.enuTextType = GetTextType(strLine.at(0));
+//                stuTemp.enuSouType  = GetSouType(strLine.at(2));
+//                stuTemp.StrCont = strLine.at(1);
+//                m_StuWord.append(stuTemp);
+//                stuTemp.clear();
             }
         }
         delete read;

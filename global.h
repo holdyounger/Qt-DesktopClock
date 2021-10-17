@@ -56,6 +56,7 @@
 #include <QJsonDocument>
 #include <QPointer>
 #include <QColorDialog>
+#include <QThread>
 
 #include "http.h"
 

@@ -8,12 +8,14 @@ QLCDNumber {
   border: none;
   font-family: "STCaiyun";
 }
+
 QLabel#lab_Text {
   padding-left: 20px;
   padding-right: 20px;
-  font: 30px black;
-  font-family: "STCaiyun";
+  font: 30px red;
+  font-family: "KaiTi";
 }
+
 QGroupBox#mainLayout {
   border-bottom: 2px solid black;
   border-top: 2px solid black;

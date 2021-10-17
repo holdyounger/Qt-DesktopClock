@@ -16,24 +16,25 @@ Widget::Widget()
     m_bActionSwitchColor = true;
     m_enuSourceType = LOCAL;
     m_LCD_color = QColor(0,0,0);
+    m_nSetFontSize = 30;
+    m_FontColor = "black";
+    m_bFontAutoColorSwitch = false;
     g_nSwitchDuration = 10;
 
-    m_lab_Text->setAlignment(Qt::AlignVCenter | Qt:: AlignHCenter);
+    QString labCont = "One For You";
+    m_lab_Text->setText(labCont);
+
+    m_fontFamily = "HYShangWeiShouShuW";
+    QTimer::singleShot(1000 * g_nSwitchDuration,this,[=]()mutable{
+        m_fontFamily = "KaiTi";
+    });
 
     // 设置窗口透明
-    // setWindowOpacity(1);
     setAttribute( Qt::WA_TranslucentBackground);
 
     // 去边框
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint );
-    //m_LCD_Hour->display(1);
-    //m_LCD_Min->display(1);
-
-    QString labCont = "One For You";
-    m_lab_Text->setText(labCont);
-    // EnterAnimation(m_lab_Text, m_lab_Text->geometry());
     show();
-
 }
 
 Widget::~Widget()
@@ -128,21 +129,38 @@ void Widget::InitTrayIcon()
     m_action_exit     = new QAction(m_menu);
     m_action_LCDColor = new QAction(m_menu);
     m_action_font     = new QAction(m_menu);
+    m_action_fontColor= new QAction(m_menu);
 
     m_action_time->setText(QString("更换切换时间"));
     m_action_source->setText(QString("更换源"));
     m_action_about->setText(QString("关于"));
     m_action_color->setText(QString("边框彩带开关"));
+    m_action_fontColor->setText(QString("文案字体颜色"));
+
     m_action_exit->setText(QString("退出"));
     m_action_LCDColor->setText(QString("更改时间颜色"));
     m_action_font->setText(QString("更改文案字体"));
 
+    QMenu *childMenu = new QMenu;
+    QAction *auto_fontColor= new QAction(m_action_fontColor);
+    QAction *custom_fontColor= new QAction(m_action_fontColor);
+    childMenu->addAction(auto_fontColor);
+    childMenu->addAction(custom_fontColor);
+    auto_fontColor->setIcon(QIcon(":/Assert/img/Action/autocolor.ico"));
+    custom_fontColor->setIcon(QIcon(":/Assert/img/Action/customcolor.ico"));
+
+    auto_fontColor->setText(QString("自动更换文案字体"));
+    custom_fontColor->setText(QString("自定义文案字体"));
+    m_action_fontColor->setMenu(childMenu);
+
+
     m_action_time->setIcon(QIcon(":/Assert/img/Action/time.ico"));
     m_action_source->setIcon(QIcon(":/Assert/img/Action/switch.ico"));
     m_action_color->setIcon(QIcon(":/Assert/img/Action/stop.ico"));
-    m_action_about->setIcon(QIcon(":/Assert/img/Action/about.ico"));
+    m_action_about->setIcon(QIcon(":/Assert/img/Logo.ico"));
     m_action_LCDColor->setIcon(QIcon(":/Assert/img/Action/LCD.ico"));
     m_action_font->setIcon(QIcon(":/Assert/img/Action/font.ico"));
+    m_action_fontColor->setIcon(QIcon(":/Assert/img/Action/LCD.ico"));
 
     m_menu->addAction(m_action_time);
     m_menu->addAction(m_action_source);
@@ -150,10 +168,13 @@ void Widget::InitTrayIcon()
     m_menu->addSeparator();
     m_menu->addAction(m_action_color);
     m_menu->addAction(m_action_LCDColor);
+    m_menu->addAction(m_action_fontColor);
     m_menu->addSeparator();
     m_menu->addAction(m_action_about);
     m_menu->addAction(m_action_exit);
 
+    connect(auto_fontColor, &QAction::triggered, this, &Widget::slot_autoChangeFontColor);
+    connect(custom_fontColor, &QAction::triggered, this, &Widget::slot_customChangeFontColor);
     connect(m_action_font, &QAction::triggered, this, &Widget::slot_changeFont);
     connect(m_action_LCDColor, &QAction::triggered, this, &Widget::slot_switchChangeLCDColor);
     connect(m_action_color, &QAction::triggered, this, &Widget::slot_switchChangeColor);
@@ -213,6 +234,7 @@ void Widget::createVerticalGroupBox()
     m_lab_Text->setWordWrap(true);
     m_lab_Text->adjustSize();
     m_lab_Text->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+    m_lab_Text->setAlignment(Qt::AlignVCenter | Qt:: AlignHCenter);
 
     layout->addWidget(m_hbl_Time);
     layout->addWidget(m_lab_Text);
@@ -278,14 +300,10 @@ void Widget::EnterAnimation(QObject *obj, QRect rect)
 {
     // LeaveAnimation(obj,rect);
     // 切换特效
-    int nDuration = 500 * 1;
+    int nDuration = 500 * 2;
 
     m_bswitch = false;
     QTimer::singleShot(nDuration,this,[=](){
-        //        QFontInfo font = m_lab_Text->fontInfo();
-        //        int n = font.pixelSize();
-        // emit emitChangeFontSize(n);
-        // qDebug() << "font size" << ':' << n << endl;
         m_bswitch = true;
     });
 
@@ -317,10 +335,11 @@ void Widget::LeaveAnimation(QObject *obj, QRect rect)
 
 void Widget::changeColor()
 {
-    if(m_bActionSwitchColor)
+    if(m_bActionSwitchColor && this->isVisible())
     {
-        m_vbl_Main->setStyleSheet(QString("QGroupBox#mainLayout {border-bottom:2px solid %1;border-top:2px solid %1;padding: 0px;margin: 0px;}"
-"QLCDNumber{color:rgb(%2,%3,%4);}").arg(Global::GetColor()).arg(m_LCD_color.red()).arg(m_LCD_color.green()).arg(m_LCD_color.blue()));
+        QString mainStyle = QString("QGroupBox#mainLayout {border-bottom:2px solid %1;border-top:2px solid %1;padding: 0px;margin: 0px;}QLCDNumber{color:rgb(%2,%3,%4);}")
+                .arg(Global::GetColor()).arg(m_LCD_color.red()).arg(m_LCD_color.green()).arg(m_LCD_color.blue());
+        m_vbl_Main->setStyleSheet(QString("%1").arg(mainStyle));
     }
 }
 
@@ -359,46 +378,32 @@ SHOWSOUCETYPE Widget::getChoicedItem()
 
 QString Widget::getChoicedFont()
 {
-    QMap<QString,FONTTYPE> FontMap;
+    QMap<QString,QString> FontMap;
     QSettings setFontIni(":/Config/font.ini",QSettings::IniFormat);
     QStringList Items;
 
     int nCount = setFontIni.value("Font/Number").toInt();
-    for(int i = 0; i < nCount; i++)
+    for(int i = 1; i <= nCount; i++)
     {
-        FONTTYPE enuFont = FONTTYPE(i);
-        QString iniName = OBJNAME(FONTTYPE(i));
-        QString key = setFontIni.value(QString("Font/%1").arg(iniName)).toString();
-        FontMap.insert(key, FONTTYPE(i));
+        QString key = setFontIni.value(QString("Font/FontCh%1").arg(i)).toString();
+        QString value   = setFontIni.value(QString("Font/FontEng%1").arg(i)).toString();
+        Items.append(key);
+        FontMap.insert(key,value);
     }
-
-    Items << tr("楷体") << tr("汉仪手写书简") << tr("每日诗词");
 
     bool ok;
     QInputDialog Dialog;
     Dialog.setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint);
-    QString item = Dialog.getItem(this, tr("更换一言来源"),
-                                  tr("来源:"), Items, 0, false, &ok);
+    QString item = Dialog.getItem(this, tr("更换字体"),
+                                  tr(""), Items, 0, false, &ok);
     if (ok && !item.isEmpty())
     {
-        if(item == "本地")
-        {
-            return "LOCAL";
-        }
-        else if(item == "每日诗词")
-        {
-            return "POETRY";
-        }
-        else if(item == "每日一言")
-        {
-            return "YIYAN";
-        }
-        else
-        {
-            return "LOCAL";
-        }
+        return FontMap[item];
     }
-    return "LOCAL";
+    else
+    {
+        return m_fontFamily;
+    }
 }
 
 void Widget::slot_showWindow()
@@ -420,30 +425,27 @@ void Widget::slot_showWindow()
 
 void Widget::slot_changeWord()
 {
-    LongStory ObjLs;
-    QString strStyle;
+    // qDebug() << this->isVisible();
+    if(this->isVisible() == false)
+    {
+        return;
+    }
 
-    // 先清空
-    // m_lab_Text->clear();
+    LongStory ObjLs;
+
     // <1>获取文本
     QString StrLCont = ObjLs.GetOne(m_enuSourceType);
 
     // <2> 获取用户设置
     int nSize = StrLCont.size();
-    int nSetFontSize = changeFontSize(nSize - 2);
-
-    // qDebug() << StrLCont[nRad] << ':' << nSize;
-
-    strStyle = QString::fromUtf8("QLabel {font: %1px %2;}").arg(QString::number(nSetFontSize)).arg(m_fontFamily);
-    m_lab_Text->setStyleSheet(strStyle);
+    m_nSetFontSize = changeFontSize(nSize - 2);
     m_lab_Text->setText((StrLCont).replace("\\n","\n"));
+    EnterAnimation(m_lab_Text, m_lab_Text->geometry());
 
     if(g_nSwitchDuration != 0)
     {
         m_nSwitchStatus = g_nSwitchDuration;
     }
-    EnterAnimation(m_lab_Text, m_lab_Text->geometry());
-
 
     // 判断是否获取错误
     if(StrLCont.contains("请尝试切换"))
@@ -464,10 +466,7 @@ void Widget::slot_changeWord()
             }
         });
         timer->deleteLater();
-
     }
-
-
 }
 
 void Widget::slot_changeTime()
@@ -494,10 +493,24 @@ void Widget::slot_showAbout()
     QDesktopServices::openUrl(QUrl(URL.toLatin1()));
 }
 
+
 void Widget::slot_changeFont()
 {
     m_fontFamily = getChoicedFont();
-    slot_changeWord();
+    //slot_changeWord();
+}
+
+void Widget::slot_autoChangeFontColor()
+{
+    m_bFontAutoColorSwitch = true;
+    m_FontColor = Global::GetColor();
+}
+
+void Widget::slot_customChangeFontColor()
+{
+    m_bFontAutoColorSwitch = false;
+    QColor color = QColorDialog::getColor(Qt::red, this, tr("颜色对话框"), QColorDialog::ShowAlphaChannel);
+    m_FontColor = QString("rgb(%1,%2,%3)").arg(color.red()).arg(color.green()).arg(color.blue());
 }
 
 void Widget::slot_switchChangeColor()
@@ -540,11 +553,19 @@ void Widget::keyPressEvent(QKeyEvent *e)
 
 void Widget::paintEvent(QPaintEvent *e)
 {
+    QString strStyle = QString::fromUtf8("QLabel#lab_Text{font-size: %1px;font-family:%2;color: %3;}").arg(QString::number(m_nSetFontSize)).arg(m_fontFamily).arg(m_FontColor);
+    //qDebug() << strStyle;
+    m_lab_Text->setStyleSheet(strStyle);
+
     if(m_bswitch)
     {
         changeColor();
     }
 
+    if(m_bFontAutoColorSwitch)
+    {
+        slot_autoChangeFontColor();
+    }
 }
 
 void Widget::enterEvent(QEvent *e)

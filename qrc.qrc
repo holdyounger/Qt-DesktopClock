@@ -18,13 +18,13 @@
         <file>Config/config.txt</file>
         <file>Assert/img/Action/LCD.ico</file>
         <file>Assert/img/Action/spindown.ico</file>
-        <file>Assert/img/Action/information.ico</file>
-        <file>Assert/img/Action/information.png</file>
         <file>Assert/img/Action/down.ico</file>
         <file>Assert/img/Action/up.ico</file>
         <file>Assert/img/Action/downhover.ico</file>
         <file>Assert/img/Action/uphover.ico</file>
         <file>Assert/font/HYShangWeiShouShuW.ttf</file>
         <file>Assert/img/Action/font.ico</file>
+        <file>Assert/img/Action/autocolor.ico</file>
+        <file>Assert/img/Action/customcolor.ico</file>
     </qresource>
 </RCC>

@@ -23,7 +23,9 @@ QString Global::GetColor()
                        QSettings::IniFormat);
     int nCount = settings.value("Color/Number").toInt();
     QString key = QString("Color/Color%1").arg(getRandomNum(nCount));
-    QString Color = settings.value(key).toString();
+    QString Color = settings.value(key,"NULL").toString();
+    if(Color == "NULL")
+        Color = "Black";
     //qDebug() << Color;
     return Color;
 }
@@ -33,7 +35,7 @@ int getRandomNum(int n)
     // 随机数
     int num;
     // 初始化随机种子数
-    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    qsrand(QTime::currentTime().second() / 4);
     // 调用全局的qrand()函数生成随机数，对10000取余，保证位于10000的范围内
     num=qrand()%n;
     return num;
