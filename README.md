@@ -27,7 +27,7 @@ Description: 不局限与知乎上文案对我的吸引，想整理并能在生�
 
 - [x] CSV数据
 
-- [ ] API
+- [x] API
 
 最终是保存到SQLite中
 
