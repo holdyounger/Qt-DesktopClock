@@ -9,6 +9,16 @@ Description: 不局限与知乎上文案对我的吸引，想整理并能在生�
 >
 > [点这里㊙](https://www.yuque.com/docs/share/78da571b-0bd6-428e-93db-b5673b487d30?#%20%E3%80%8AOneForYou%E3%80%8B)
 
+适用🤔：
+
+
+- 代码逻辑简单
+
+
+
+
+
+
 ## ✉️文案
 
 ### 文案类型
@@ -35,9 +45,9 @@ Description: 不局限与知乎上文案对我的吸引，想整理并能在生�
 
 ## 💄界面
 
-![img](https://cdn.nlark.com/yuque/0/2021/png/2647370/1634464005319-09cce02c-5793-4a65-988f-06c2f7ab0a75.png)
+![img](ReadMe.assets/1634464005319-09cce02c-5793-4a65-988f-06c2f7ab0a75.png)
 
-![img](https://cdn.nlark.com/yuque/0/2021/png/2647370/1634464024492-a3b5d5ff-db8f-4ced-aa0f-89c2d9a2b2f4.png)
+![img](ReadMe.assets/1634464024492-a3b5d5ff-db8f-4ced-aa0f-89c2d9a2b2f4.png)
 
 
 
@@ -47,27 +57,27 @@ Description: 不局限与知乎上文案对我的吸引，想整理并能在生�
 
 在界面双击即可切换文案
 
-![img](1634464262415-d6c4ac8f-ada5-406b-80f6-cee17fc000b9.gif)
+![img](ReadMe.assets\1634464262415-d6c4ac8f-ada5-406b-80f6-cee17fc000b9.gif)
 
 ## 2. 🍼更换源
 
-![img](1634464591320-5d07b21f-a4e2-4064-a364-b285a7788401.gif)
+![img](ReadMe.assets\1634464591320-5d07b21f-a4e2-4064-a364-b285a7788401-163452014868611.gif)
 
 ## 3. 🌈更换颜色
 
 1. 更换文案颜色
 
-![img](1634465109636-350d4039-0fbf-4121-b125-41e94678ee1b.gif)
+![img](ReadMe.assets/1634465109636-350d4039-0fbf-4121-b125-41e94678ee1b-163452015705712.gif)
 
-![img](https://cdn.nlark.com/yuque/0/2021/gif/2647370/1634465138019-3606c518-b99e-47f6-bd1f-c5ab7adedd5a.gif)
+![img](ReadMe.assets/1634465138019-3606c518-b99e-47f6-bd1f-c5ab7adedd5a.gif)
 
 1. 更换时钟颜色
 
-![img](https://cdn.nlark.com/yuque/0/2021/gif/2647370/1634464904008-2cc8a2d0-e40a-4c2a-a3a0-a09029cf8e99.gif)
+![img](ReadMe.assets/1634464904008-2cc8a2d0-e40a-4c2a-a3a0-a09029cf8e99.gif)
 
 ## 4. 🕓更换切换时间
 
-![img](https://cdn.nlark.com/yuque/0/2021/gif/2647370/1634465035436-f22cb917-4df9-4b74-af94-5981a9abb928.gif)
+![img](ReadMe.assets\1634465035436-f22cb917-4df9-4b74-af94-5981a9abb928.gif)
 
 ## 5. 😉隐藏界面 
 
