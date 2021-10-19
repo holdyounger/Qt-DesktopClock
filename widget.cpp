@@ -461,7 +461,6 @@ void Widget::slot_changeWord()
             else
             {
                 m_enuSourceType = LOCAL;
-                // qDebug() << "切换" ;
                 slot_changeWord();
             }
         });

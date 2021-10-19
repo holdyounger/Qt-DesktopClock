@@ -35,7 +35,7 @@ int getRandomNum(int n)
     // 随机数
     int num;
     // 初始化随机种子数
-    qsrand(QTime::currentTime().second() / 4);
+    qsrand(QTime::currentTime().second() / 10);
     // 调用全局的qrand()函数生成随机数，对10000取余，保证位于10000的范围内
     num=qrand()%n;
     return num;
