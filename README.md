@@ -1,8 +1,8 @@
----
-title: OneForYou❤️
-Description: 不局限与知乎上文案对我的吸引，想整理并能在生活工作中随时看到，因此想做一款桌面显示的软件
-编译环境： Qt5.9.9 MSVC 2017 64bit
----
+![Alt](https://repobeats.axiom.co/api/embed/de530e946e79af1ebe07f180d49cb3a3de2ee74a.svg "Repobeats analytics image")
+
+# OneForYou❤️
+> 不局限与知乎上文案对我的吸引，想整理并能在生活工作中随时看到，因此想做一款桌面显示的软件
+> 编译环境： Qt5.9.9 MSVC 2017 64bit
 
 > 想法来自知乎、各公众号、句读等与文案相关的场景。借以整理
 >
